@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="idParser" class="by.gsu.petclinicx.repository.common.IdResultSetParser"/>
-    <bean id="queryExecutor" class="by.gsu.petclinicx.repository.common.QueryExecutor">
+    <bean id="queryExecutor" class="by.gsu.petclinicx.repository.common.QueryExecutor" init-method="init" destroy-method="destroy">
         <constructor-arg type="by.gsu.petclinicx.repository.common.IdResultSetParser" ref="idParser"/>
     </bean>
 

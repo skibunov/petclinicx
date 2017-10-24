@@ -6,15 +6,24 @@ import java.util.List;
 public class QueryExecutor {
 
     private final IdResultSetParser idRSParser;
+    private Connection conn;
 
     public QueryExecutor(IdResultSetParser idRSParser) {
         this.idRSParser = idRSParser;
     }
 
-    public <T> List<T> getAll(String query, ResultSetParser<T> parser) {
-        try (Connection conn =
-                     DriverManager.getConnection("jdbc:sqlite:animals.db")) {
+    public void init() throws SQLException {
+        System.out.println("initializing connection");
+        conn = DriverManager.getConnection("jdbc:sqlite:animals.db");
+    }
 
+    public void destroy() throws SQLException {
+        System.out.println("closing connection");
+        conn.close();
+    }
+
+    public <T> List<T> getAll(String query, ResultSetParser<T> parser) {
+        try {
             Statement s3 = conn.createStatement();
             ResultSet rs = s3.executeQuery(query);
 
@@ -38,8 +47,7 @@ public class QueryExecutor {
     }
 
     public int executeUpdate(String sql, PreparedStatementParamsProcessor paramsProcessor) {
-        try (Connection conn =
-                     DriverManager.getConnection("jdbc:sqlite:animals.db")) {
+        try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             paramsProcessor.process(preparedStatement);
             return preparedStatement.executeUpdate();
@@ -49,8 +57,7 @@ public class QueryExecutor {
     }
 
     public long executeCreate(String sql, PreparedStatementParamsProcessor paramsProcessor) {
-        try (Connection conn =
-                     DriverManager.getConnection("jdbc:sqlite:animals.db")) {
+        try  {
             PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             paramsProcessor.process(preparedStatement);
             preparedStatement.executeUpdate();
