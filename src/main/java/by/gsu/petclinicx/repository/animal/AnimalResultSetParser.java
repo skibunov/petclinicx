@@ -4,7 +4,7 @@ import by.gsu.petclinicx.model.Animal;
 import by.gsu.petclinicx.model.Cat;
 import by.gsu.petclinicx.model.Disease;
 import by.gsu.petclinicx.model.Dog;
-import by.gsu.petclinicx.repository.disease.DiseaseRepository;
+import by.gsu.petclinicx.repository.common.GetRepository;
 import by.gsu.petclinicx.repository.common.ResultSetParser;
 
 import java.sql.ResultSet;
@@ -13,9 +13,9 @@ import java.util.List;
 
 public class AnimalResultSetParser implements ResultSetParser<Animal> {
 
-    private final DiseaseRepository diseaseRepository;
+    private final GetRepository<Disease> diseaseRepository;
 
-    public AnimalResultSetParser(DiseaseRepository diseaseRepository) {
+    public AnimalResultSetParser(GetRepository<Disease> diseaseRepository) {
         this.diseaseRepository = diseaseRepository;
     }
 

@@ -4,7 +4,7 @@ import by.gsu.petclinicx.model.Animal;
 import by.gsu.petclinicx.model.Cat;
 import by.gsu.petclinicx.model.Disease;
 import by.gsu.petclinicx.model.Dog;
-import by.gsu.petclinicx.repository.disease.DiseaseRepository;
+import by.gsu.petclinicx.repository.common.GetRepository;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -12,10 +12,10 @@ import java.util.Scanner;
 
 public class AnimalFactory {
     private Scanner scanner = new Scanner(System.in);
-    private final DiseaseRepository diseaseRepository;
+    private final GetRepository<Disease> diseaseRepository;
     private int generatedCount = 0;
 
-    public AnimalFactory(DiseaseRepository diseaseRepository) {
+    public AnimalFactory(GetRepository<Disease> diseaseRepository) {
         this.diseaseRepository = diseaseRepository;
     }
 
