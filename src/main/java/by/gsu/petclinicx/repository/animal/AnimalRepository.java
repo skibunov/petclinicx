@@ -6,7 +6,7 @@ import by.gsu.petclinicx.model.Dog;
 import by.gsu.petclinicx.repository.common.CrudRepository;
 import by.gsu.petclinicx.repository.common.PreparedStatementParamsProcessor;
 import by.gsu.petclinicx.repository.common.QueryExecutor;
-import by.gsu.petclinicx.repository.common.ResultSetParser;
+import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -15,9 +15,9 @@ import java.util.List;
 
 public class AnimalRepository implements CrudRepository<Animal> {
     private final QueryExecutor queryExecutor;
-    private final ResultSetParser<Animal> animalResultSetParser;
+    private final RowMapper<Animal> animalResultSetParser;
 
-    public AnimalRepository(QueryExecutor queryExecutor, ResultSetParser<Animal> animalResultSetParser) {
+    public AnimalRepository(QueryExecutor queryExecutor, RowMapper<Animal> animalResultSetParser) {
         this.queryExecutor = queryExecutor;
         this.animalResultSetParser = animalResultSetParser;
     }

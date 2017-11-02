@@ -1,44 +1,45 @@
 package by.gsu.petclinicx.repository.common;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.sql.*;
 import java.util.List;
 
+@Repository
 public class QueryExecutor {
 
-    private final IdResultSetParser idRSParser;
+    private IdResultSetParser idRSParser;
     private Connection conn;
+    private JdbcTemplate jdbcTemplate;
 
-    public QueryExecutor(IdResultSetParser idRSParser) {
+    public QueryExecutor(IdResultSetParser idRSParser,
+                         JdbcTemplate jdbcTemplate) {
         this.idRSParser = idRSParser;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
+    @PostConstruct
     public void init() throws SQLException {
         System.out.println("initializing connection");
         conn = DriverManager.getConnection("jdbc:sqlite:animals.db");
     }
 
+    @PreDestroy
     public void destroy() throws SQLException {
         System.out.println("closing connection");
         conn.close();
     }
 
-    public <T> List<T> getAll(String query, ResultSetParser<T> parser) {
-        try {
-            Statement s3 = conn.createStatement();
-            ResultSet rs = s3.executeQuery(query);
+    public <T> List<T> getAll(String query, RowMapper<T> parser) {
+        return jdbcTemplate.query(query, parser);
 
-            List<T> result = parser.parse(rs);
-            if (rs.isClosed()) {
-                rs.close();
-            }
-            return result;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
-    public <T> T getById(String query, ResultSetParser<T> parser) {
+    public <T> T getById(String query, RowMapper<T> parser) {
         List<T> list = getAll(query, parser);
         return list
                 .stream()
@@ -47,13 +48,7 @@ public class QueryExecutor {
     }
 
     public int executeUpdate(String sql, PreparedStatementParamsProcessor paramsProcessor) {
-        try {
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            paramsProcessor.process(preparedStatement);
-            return preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return jdbcTemplate.update(sql, paramsProcessor::process);
     }
 
     public long executeCreate(String sql, PreparedStatementParamsProcessor paramsProcessor) {
@@ -63,7 +58,7 @@ public class QueryExecutor {
             preparedStatement.executeUpdate();
 
             ResultSet rs = preparedStatement.getGeneratedKeys();
-            return idRSParser.parseOne(rs);
+            return idRSParser.mapRow(rs, 0);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -8,12 +8,15 @@ import java.util.Scanner;
 
 public class AnimalMenu {
 
-    private final AnimalFactory factory;
-    private final AnimalRepository animalRepository;
+    private  AnimalFactory factory;
+    private  AnimalRepository animalRepository;
     private final Scanner scanner = new Scanner(System.in);
 
-    public AnimalMenu(AnimalFactory factory, AnimalRepository animalRepository) {
+    public void setFactory(AnimalFactory factory) {
         this.factory = factory;
+    }
+
+    public void setAnimalRepository(AnimalRepository animalRepository) {
         this.animalRepository = animalRepository;
     }
 

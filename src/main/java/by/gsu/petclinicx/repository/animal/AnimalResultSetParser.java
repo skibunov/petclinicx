@@ -5,13 +5,13 @@ import by.gsu.petclinicx.model.Cat;
 import by.gsu.petclinicx.model.Disease;
 import by.gsu.petclinicx.model.Dog;
 import by.gsu.petclinicx.repository.common.GetRepository;
-import by.gsu.petclinicx.repository.common.ResultSetParser;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.Nullable;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.SQLException;
 
-public class AnimalResultSetParser implements ResultSetParser<Animal> {
+public class AnimalResultSetParser implements RowMapper<Animal> {
 
     private final GetRepository<Disease> diseaseRepository;
 
@@ -19,45 +19,35 @@ public class AnimalResultSetParser implements ResultSetParser<Animal> {
         this.diseaseRepository = diseaseRepository;
     }
 
+    @Nullable
     @Override
-    public List<Animal> parse(ResultSet rs) {
-        List<Animal> animals = new ArrayList<>();
+    public Animal mapRow(ResultSet resultSet, int i) throws SQLException {
+        long id = resultSet.getLong("id");
+        String name = resultSet.getString("name");
 
-        try {
-            while (rs.next()) {
-                long id = rs.getLong("id");
-                String name = rs.getString("name");
-
-                Object miceObj = rs.getObject("mice");
-                Object bonesObj = rs.getObject("bones");
+        Object miceObj = resultSet.getObject("mice");
+        Object bonesObj = resultSet.getObject("bones");
 
 
-                Animal animal;
-                if (bonesObj != null) {
-                    Dog dog = new Dog();
-                    dog.setBones(Integer.valueOf(bonesObj.toString()));
-                    animal = dog;
-                } else {
-                    Cat cat = new Cat();
-                    cat.setMice(Integer.valueOf(miceObj.toString()));
-                    animal = cat;
-                }
-
-                animal.setId(id);
-                animal.setName(name);
-
-                long diseaseId = rs.getLong("disease_id");
-                Disease disease = diseaseRepository.getById(diseaseId);
-
-                animal.setDisease(disease);
-
-                animals.add(animal);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        Animal animal;
+        if (bonesObj != null) {
+            Dog dog = new Dog();
+            dog.setBones(Integer.valueOf(bonesObj.toString()));
+            animal = dog;
+        } else {
+            Cat cat = new Cat();
+            cat.setMice(Integer.valueOf(miceObj.toString()));
+            animal = cat;
         }
 
+        animal.setId(id);
+        animal.setName(name);
 
-        return animals;
+        long diseaseId = resultSet.getLong("disease_id");
+        Disease disease = diseaseRepository.getById(diseaseId);
+
+        animal.setDisease(disease);
+
+        return animal;
     }
 }
