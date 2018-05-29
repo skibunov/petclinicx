@@ -7,10 +7,12 @@ import by.gsu.petclinicx.model.Dog;
 import by.gsu.petclinicx.repository.common.GetRepository;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class AnimalResultSetParser implements RowMapper<Animal> {
 
     private final GetRepository<Disease> diseaseRepository;

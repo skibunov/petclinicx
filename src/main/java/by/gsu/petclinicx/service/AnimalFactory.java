@@ -5,16 +5,20 @@ import by.gsu.petclinicx.model.Cat;
 import by.gsu.petclinicx.model.Disease;
 import by.gsu.petclinicx.model.Dog;
 import by.gsu.petclinicx.repository.common.GetRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+@Component
 public class AnimalFactory {
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
     private final GetRepository<Disease> diseaseRepository;
     private int generatedCount = 0;
 
+    @Autowired
     public AnimalFactory(GetRepository<Disease> diseaseRepository) {
         this.diseaseRepository = diseaseRepository;
     }

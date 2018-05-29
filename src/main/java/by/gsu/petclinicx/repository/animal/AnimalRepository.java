@@ -7,12 +7,14 @@ import by.gsu.petclinicx.repository.common.CrudRepository;
 import by.gsu.petclinicx.repository.common.PreparedStatementParamsProcessor;
 import by.gsu.petclinicx.repository.common.QueryExecutor;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 
+@Repository
 public class AnimalRepository implements CrudRepository<Animal> {
     private final QueryExecutor queryExecutor;
     private final RowMapper<Animal> animalResultSetParser;

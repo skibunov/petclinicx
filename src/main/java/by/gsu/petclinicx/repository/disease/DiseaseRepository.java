@@ -4,10 +4,12 @@ import by.gsu.petclinicx.model.Disease;
 import by.gsu.petclinicx.repository.common.GetRepository;
 import by.gsu.petclinicx.repository.common.QueryExecutor;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Repository
 public class DiseaseRepository implements GetRepository<Disease> {
 
     private final RowMapper<Disease> parser;

@@ -2,12 +2,12 @@ package by.gsu.petclinicx.repository.common;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@Repository
+@Component
 public class IdResultSetParser implements RowMapper<Long> {
 
     @Nullable

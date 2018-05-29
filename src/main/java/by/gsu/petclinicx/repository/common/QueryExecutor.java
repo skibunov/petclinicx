@@ -2,14 +2,14 @@ package by.gsu.petclinicx.repository.common;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.sql.*;
 import java.util.List;
 
-@Repository
+@Component
 public class QueryExecutor {
 
     private IdResultSetParser idRSParser;
