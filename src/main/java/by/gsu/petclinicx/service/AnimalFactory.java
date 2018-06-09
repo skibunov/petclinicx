@@ -16,7 +16,6 @@ import java.util.Scanner;
 public class AnimalFactory {
     private final Scanner scanner = new Scanner(System.in);
     private final GetRepository<Disease> diseaseRepository;
-    private int generatedCount = 0;
 
     @Autowired
     public AnimalFactory(GetRepository<Disease> diseaseRepository) {
@@ -24,7 +23,10 @@ public class AnimalFactory {
     }
 
     public Animal readAnimal() {
-        generatedCount++;
+        return readAnimal(null);
+    }
+
+    public Animal readAnimal(Long id) {
         int typeId = 0;
         while (typeId != 1 && typeId != 2) {
             System.out.println("cat(1) or dog(2)?");
@@ -39,26 +41,14 @@ public class AnimalFactory {
             System.out.println("input mice count");
             int mice = readInt(0, Integer.MAX_VALUE);
             Disease disease = readDisease();
-            result = new Cat((long) generatedCount, name, disease, mice);
+            result = new Cat(id, name, disease, mice);
         } else {
             System.out.println("input bones count");
             int bones = readInt(0, Integer.MAX_VALUE);
             Disease disease = readDisease();
-            result = new Dog((long) generatedCount, name, disease, bones);
+            result = new Dog(id, name, disease, bones);
         }
         return result;
-    }
-
-    public Animal generateAnimal() {
-        generatedCount++;
-        String name = "generated" + generatedCount;
-        List<Disease> diseases = diseaseRepository.getAll();
-        Disease disease = diseases.get(generatedCount % ((diseases.size() - 1) != 0 ? (diseases.size() - 1) : 1));
-        if (generatedCount % 2 == 0) {
-            return new Cat((long) generatedCount, name, disease, generatedCount);
-        } else {
-            return new Dog((long) generatedCount, name, disease, generatedCount);
-        }
     }
 
     private Disease readDisease() {

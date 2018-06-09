@@ -21,36 +21,32 @@ public class AnimalRepository implements CrudRepository<Animal> {
         this.sessionFactory = sessionFactory;
     }
 
-
     @Override
-    public int delete(Long id) {
+    public void delete(Long id) {
         Session session = sessionFactory.getCurrentSession();
         Animal animal = session.load(Animal.class, id);
         session.remove(animal);
-        return 0;
     }
 
     @Override
-    public int update(Animal animal) {
-        Session session = sessionFactory.getCurrentSession();
-        session.save(animal);
-        return 0;
+    public void update(Animal animal) {
+        sessionFactory.getCurrentSession().update(animal);
     }
 
     @Override
     public Animal create(Animal animal) {
-        Session session = sessionFactory.getCurrentSession();
-        return (Animal) session.save(animal);
+        return (Animal) sessionFactory.getCurrentSession().save(animal);
     }
 
     @Override
     public List<Animal> getAll() {
-        return null;
+        return sessionFactory.getCurrentSession()
+                .createQuery("select a from Animal a", Animal.class)
+                .list();
     }
 
     @Override
     public Animal getById(Long id) {
-        Session session = sessionFactory.getCurrentSession();
-        return session.get(Animal.class, id);
+        return sessionFactory.getCurrentSession().get(Animal.class, id);
     }
 }
