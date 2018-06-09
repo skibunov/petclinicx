@@ -1,7 +1,7 @@
 package by.gsu.petclinicx.service;
 
 import by.gsu.petclinicx.model.Animal;
-import by.gsu.petclinicx.repository.animal.AnimalRepository;
+import by.gsu.petclinicx.repository.common.CrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +12,11 @@ import java.util.Scanner;
 public class AnimalMenu {
 
     private final   AnimalFactory factory;
-    private final   AnimalRepository animalRepository;
+    private final CrudRepository<Animal> animalRepository;
     private final Scanner scanner = new Scanner(System.in);
 
     @Autowired
-    public AnimalMenu(AnimalFactory factory, AnimalRepository animalRepository) {
+    public AnimalMenu(AnimalFactory factory, CrudRepository<Animal> animalRepository) {
         this.factory = factory;
         this.animalRepository = animalRepository;
     }

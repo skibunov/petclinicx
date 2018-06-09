@@ -24,13 +24,11 @@ public class QueryExecutor {
 
     @PostConstruct
     public void init() throws SQLException {
-        System.out.println("initializing connection");
         conn = DriverManager.getConnection("jdbc:sqlite:animals.db");
     }
 
     @PreDestroy
     public void destroy() throws SQLException {
-        System.out.println("closing connection");
         conn.close();
     }
 

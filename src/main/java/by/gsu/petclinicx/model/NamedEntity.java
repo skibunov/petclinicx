@@ -1,9 +1,15 @@
 package by.gsu.petclinicx.model;
 
+import javax.persistence.*;
+
+@MappedSuperclass
 public class NamedEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name")
     private String name;
 
     public NamedEntity() {

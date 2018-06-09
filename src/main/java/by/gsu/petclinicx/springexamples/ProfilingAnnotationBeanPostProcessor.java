@@ -5,7 +5,6 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -23,8 +22,10 @@ public class ProfilingAnnotationBeanPostProcessor implements BeanPostProcessor {
     @Nullable
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        long count = Arrays.stream(bean.getClass().getDeclaredMethods())
-                .filter(method -> method.getAnnotation(Profiling.class) != null)
+        long count = Arrays.stream(
+                bean.getClass().getDeclaredMethods())
+                .filter(method ->
+                        method.getAnnotation(Profiling.class) != null)
                 .count();
         if (count > 0) {
             map.put(beanName, bean);
@@ -36,29 +37,26 @@ public class ProfilingAnnotationBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (map.containsKey(beanName)) {
-            List<Method> methods = Arrays.stream(bean.getClass().getDeclaredMethods())
+            Object original = map.get(beanName);
+            List<Method> methods = Arrays.stream(original.getClass().getDeclaredMethods())
                     .filter(method -> method.getAnnotation(Profiling.class) != null)
                     .collect(Collectors.toList());
 
-            Method method = methods.get(0);
+            return Proxy.newProxyInstance(
+                    original.getClass().getClassLoader(),
+                    original.getClass().getInterfaces(),
+                    (proxy, method, args) -> {
+                        long start = System.currentTimeMillis();
+                        Object result = method.invoke(bean, args);
+                        long stop = System.currentTimeMillis();
 
-            Object proxy = Proxy.newProxyInstance(
-                    bean.getClass().getClassLoader(),
-                    bean.getClass().getInterfaces(),
-                    new InvocationHandler() {
-                        @Override
-                        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                            long start = System.currentTimeMillis();
-                            Object result = method.invoke(bean, args);
-                            long stop = System.currentTimeMillis();
-
+                        if (methods.contains(method)) {
                             System.out.println(stop - start);
-
-                            return result;
                         }
+
+                        return result;
                     }
             );
-            return proxy;
         }
         return bean;
     }

@@ -1,6 +1,14 @@
 package by.gsu.petclinicx.model;
 
+import javax.persistence.Basic;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("cat")
 public class Cat extends Animal {
+
+    @Basic
     private Integer mice;
 
     public Cat() {

@@ -1,7 +1,13 @@
 package by.gsu.petclinicx.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "animals")
+@DiscriminatorColumn(name = "atype")
 public abstract class Animal extends NamedEntity {
 
+    @ManyToOne(fetch = FetchType.EAGER)
     private Disease disease;
 
     public Disease getDisease() {
