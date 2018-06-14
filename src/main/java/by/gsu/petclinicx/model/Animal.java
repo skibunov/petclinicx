@@ -7,7 +7,7 @@ import javax.persistence.*;
 @DiscriminatorColumn(name = "atype")
 public abstract class Animal extends NamedEntity {
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Disease disease;
 
     public Disease getDisease() {

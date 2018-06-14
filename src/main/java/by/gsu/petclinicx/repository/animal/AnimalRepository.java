@@ -41,12 +41,14 @@ public class AnimalRepository implements CrudRepository<Animal> {
     @Override
     public List<Animal> getAll() {
         return sessionFactory.getCurrentSession()
-                .createQuery("select a from Animal a", Animal.class)
+                .createQuery(
+                        "select a from Animal a inner join fetch a.disease", Animal.class)
                 .list();
     }
 
     @Override
     public Animal getById(Long id) {
-        return sessionFactory.getCurrentSession().get(Animal.class, id);
+        Animal animal = sessionFactory.getCurrentSession().get(Animal.class, id);
+        return animal;
     }
 }
