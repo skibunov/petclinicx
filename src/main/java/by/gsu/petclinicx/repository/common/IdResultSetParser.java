@@ -1,18 +1,18 @@
 package by.gsu.petclinicx.repository.common;
 
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
 
-public class IdResultSetParser implements ResultSetParser<Long> {
+@Component
+public class IdResultSetParser implements RowMapper<Long> {
+
+    @Nullable
     @Override
-    public List<Long> parse(ResultSet rs) {
-        try {
-            rs.next();
-            return Collections.singletonList(rs.getLong(1));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public Long mapRow(ResultSet resultSet, int i) throws SQLException {
+        return resultSet.getLong(1);
     }
 }

@@ -1,30 +1,24 @@
 package by.gsu.petclinicx.repository.disease;
 
 import by.gsu.petclinicx.model.Disease;
-import by.gsu.petclinicx.repository.common.ResultSetParser;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.SQLException;
 
+@Component
 public class DiseaseResultSetParser
-        implements ResultSetParser<Disease> {
+        implements RowMapper<Disease> {
 
+    @Nullable
     @Override
-    public List<Disease> parse(ResultSet rs) {
-        try {
-            List<Disease> diseases = new ArrayList<>();
-            while (rs.next()) {
-                long id = rs.getLong("id");
-                String name = rs.getString("name");
+    public Disease mapRow(ResultSet resultSet, int i) throws SQLException {
+        long id = resultSet.getLong("id");
+        String name = resultSet.getString("name");
 
-                Disease d = new Disease(id, name);
-                diseases.add(d);
-            }
-            rs.close();
-            return diseases;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return new Disease(id, name);
     }
+
 }

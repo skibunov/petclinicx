@@ -2,16 +2,20 @@ package by.gsu.petclinicx.service;
 
 import by.gsu.petclinicx.model.Animal;
 import by.gsu.petclinicx.repository.animal.AnimalRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+@Component
 public class AnimalMenu {
 
-    private final AnimalFactory factory;
-    private final AnimalRepository animalRepository;
+    private final   AnimalFactory factory;
+    private final   AnimalRepository animalRepository;
     private final Scanner scanner = new Scanner(System.in);
 
+    @Autowired
     public AnimalMenu(AnimalFactory factory, AnimalRepository animalRepository) {
         this.factory = factory;
         this.animalRepository = animalRepository;

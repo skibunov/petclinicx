@@ -3,27 +3,38 @@ package by.gsu.petclinicx.repository.animal;
 import by.gsu.petclinicx.model.Animal;
 import by.gsu.petclinicx.model.Cat;
 import by.gsu.petclinicx.model.Dog;
+import by.gsu.petclinicx.repository.common.CrudRepository;
 import by.gsu.petclinicx.repository.common.PreparedStatementParamsProcessor;
 import by.gsu.petclinicx.repository.common.QueryExecutor;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 
-public class AnimalRepository {
+@Repository
+public class AnimalRepository implements CrudRepository<Animal> {
     private final QueryExecutor queryExecutor;
-    private final AnimalResultSetParser animalResultSetParser;
+    private final RowMapper<Animal> animalResultSetParser;
 
-    public AnimalRepository(QueryExecutor queryExecutor, AnimalResultSetParser animalResultSetParser) {
+    public AnimalRepository(QueryExecutor queryExecutor, RowMapper<Animal> animalResultSetParser) {
         this.queryExecutor = queryExecutor;
         this.animalResultSetParser = animalResultSetParser;
     }
 
+    @Override
     public List<Animal> getAll() {
         return queryExecutor.getAll("select * from animals", animalResultSetParser);
     }
 
+    @Override
+    public Animal getById(Long id) {
+        return queryExecutor.getById("select  * from disease where id = " + id, animalResultSetParser);
+    }
+
+    @Override
     public int delete(Long id) {
         return queryExecutor.executeUpdate("delete from animals where id  = ?", new PreparedStatementParamsProcessor() {
             @Override
@@ -33,6 +44,7 @@ public class AnimalRepository {
         });
     }
 
+    @Override
     public int update(Animal animal) {
         return queryExecutor.executeUpdate(
                 "update animals set name = ?, bones = ?, mice = ?, disease_id = ? where id  = ?", ps -> {
@@ -50,6 +62,7 @@ public class AnimalRepository {
         });
     }
 
+    @Override
     public Animal create(Animal animal) {
         long id = queryExecutor.executeCreate("insert into animals (name, bones, mice, disease_id) values (?,?,?,?)", ps -> {
             ps.setString(1, animal.getName());
