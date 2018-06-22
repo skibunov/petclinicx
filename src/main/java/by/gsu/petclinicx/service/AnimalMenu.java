@@ -1,7 +1,7 @@
 package by.gsu.petclinicx.service;
 
 import by.gsu.petclinicx.model.Animal;
-import by.gsu.petclinicx.repository.animal.AnimalRepository;
+import by.gsu.petclinicx.repository.common.CrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +12,11 @@ import java.util.Scanner;
 public class AnimalMenu {
 
     private final   AnimalFactory factory;
-    private final   AnimalRepository animalRepository;
+    private final CrudRepository<Animal> animalRepository;
     private final Scanner scanner = new Scanner(System.in);
 
     @Autowired
-    public AnimalMenu(AnimalFactory factory, AnimalRepository animalRepository) {
+    public AnimalMenu(AnimalFactory factory, CrudRepository<Animal> animalRepository) {
         this.factory = factory;
         this.animalRepository = animalRepository;
     }
@@ -30,16 +30,14 @@ public class AnimalMenu {
                     case 1:
                         animalRepository.create(factory.readAnimal()); break;
                     case 2:
-                        Animal animal = factory.readAnimal();
-                        animal.setId((long) readId());
+                        long id = readId();
+                        Animal animal = factory.readAnimal(id);
                         animalRepository.update(animal);
                         break;
                     case 3:
                         animalRepository.delete((long) readId());break;
                     case 4:
                         animalRepository.getAll().forEach(System.out::println); break;
-                    case 5:
-                        animalRepository.create(factory.generateAnimal()); break;
                     case 6:
                         return;
                 }
@@ -54,7 +52,6 @@ public class AnimalMenu {
                 "2. update\n" +
                 "3. delete\n" +
                 "4. print all\n" +
-                "5. add generated\n" +
                 "6. exit\n";
         System.out.println(s);
     }

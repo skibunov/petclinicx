@@ -2,35 +2,34 @@ package by.gsu.petclinicx.repository.disease;
 
 import by.gsu.petclinicx.model.Disease;
 import by.gsu.petclinicx.repository.common.GetRepository;
-import by.gsu.petclinicx.repository.common.QueryExecutor;
-import org.springframework.jdbc.core.RowMapper;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
+@Transactional
 public class DiseaseRepository implements GetRepository<Disease> {
 
-    private final RowMapper<Disease> parser;
-    private final QueryExecutor queryExecutor;
+    private final SessionFactory factory;
 
-    public DiseaseRepository(RowMapper<Disease> parser,
-                             QueryExecutor queryExecutor) {
-        this.parser = parser;
-        this.queryExecutor = queryExecutor;
+    @Autowired
+    public DiseaseRepository(SessionFactory factory) {
+        this.factory = factory;
     }
 
     @Override
     @Transactional
     public List<Disease> getAll() {
-        return queryExecutor.getAll("select  * from disease", parser);
+        return factory.getCurrentSession()
+                .createQuery("select d from Disease d", Disease.class)
+                .list();
     }
 
     @Override
     public Disease getById(Long id) {
-       return queryExecutor.getById(
-               "select  * from disease where id = " + id, parser
-       );
+       return factory.getCurrentSession().get(Disease.class, id);
     }
 }
